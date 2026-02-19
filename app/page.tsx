@@ -196,58 +196,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        <article className="rounded-3xl border border-white/15 bg-black/40 px-6 py-6 max-md:px-4">
-          <div className="grid items-center gap-4 md:grid-cols-[1.1fr,1.4fr,0.9fr,0.8fr,0.2fr]">
-            <div className="flex items-center gap-3 border-white/15 md:border-r md:pr-5">
-              <div className="rounded-lg border border-white/15 bg-black/65 p-1">
-                <Image src={iconMap.PLS} alt="PLS" width={34} height={34} />
-              </div>
-              <div>
-                <p className="text-4xl font-semibold leading-none text-white max-md:text-3xl" style={{ fontFamily: "var(--font-title)" }}>
-                  PLS
-                </p>
-                <p className="text-sm text-fire-text/55">Pulse</p>
-              </div>
-            </div>
-
-            <div className="border-white/15 md:border-r md:pr-5">
-              <p className="text-4xl font-semibold leading-none text-white [font-variant-numeric:tabular-nums] max-md:text-3xl">
-                {topPrice}
-              </p>
-              <div className="mt-1 flex items-center gap-4 text-base">
-                <span className="text-fire-text/45">{topSubtext}</span>
-                <span className={plsChange.startsWith("-") ? "text-rose-500" : "text-emerald-400"}>{plsChange}</span>
-                <span
-                  className={`rounded-full px-2 py-0.5 text-xs ${
-                    topConfidence === "high"
-                      ? "bg-emerald-500/20 text-emerald-300"
-                      : topConfidence === "medium"
-                        ? "bg-amber-500/20 text-amber-300"
-                        : "bg-rose-500/20 text-rose-300"
-                  }`}
-                >
-                  {topConfidenceLabel}
-                </span>
-              </div>
-            </div>
-
-            <div>
-              <p className="text-sm text-fire-text/50">Market Cap</p>
-              <p className="text-3xl font-semibold text-white [font-variant-numeric:tabular-nums] max-md:text-2xl">{topMarketCap}</p>
-            </div>
-
-            <div className="border-white/15 md:border-r md:pr-5">
-              <p className="text-sm text-fire-text/50">Supply</p>
-              <p className="text-3xl font-semibold text-white max-md:text-2xl">135T</p>
-            </div>
-
-            <div className="text-right text-fire-text/70">
-              <Link className="text-2xl transition hover:text-fire-accent" href={`/coins/${tokenAddressMap.PLS}`}>
-                &gt;
-              </Link>
-            </div>
-          </div>
-        </article>
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
