@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { fetchOverviewSnapshotClient } from "@/lib/api";
+import AiAnalyzer from "@/components/AiAnalyzer";
 
 type FeaturedPriceItem = {
   symbol: string;
@@ -183,6 +184,8 @@ export default function HomePage() {
           style={{ fontFamily: "var(--font-title)" }}
         />
       </form>
+
+      <AiAnalyzer />
 
       <section>
         <div className="mb-4 flex items-center justify-between">

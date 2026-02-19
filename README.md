@@ -24,6 +24,11 @@ npm install
 ```bash
 NEXT_PUBLIC_RPC_URL=https://your-pulsechain-rpc-url
 MORALIS_API_KEY=your_moralis_api_key
+# Optional ClawFI/ClawAI enrichment for contract analyzer:
+CLAWFI_API_KEY=your_clawfi_api_key
+# Optional endpoint overrides:
+# CLAWFI_BASE_URL=https://api.clawfi.ai
+# CLAWFI_ANALYZE_PATH=/v1/analyze/token
 ```
 
 ## Run Locally
@@ -56,6 +61,7 @@ All API endpoints are implemented in `lib/api.ts`:
 - Dexscreener token pricing and pair discovery
 - PulseChain RPC helpers for block and gas data
 - Moralis wallet/token endpoints (`MORALIS_API_KEY` required)
+- AI contract analyzer endpoint at `app/api/ai/analyze/route.ts` (heuristic + optional ClawFI enrichment)
 
 ## Branding Assets
 

@@ -341,3 +341,35 @@ export type CoinDetailsApiResponse = {
 export async function fetchCoinDetailsClient(address: string): Promise<CoinDetailsApiResponse> {
   return fetchJson<CoinDetailsApiResponse>(`/api/coin/${address}`);
 }
+
+export type AiAnalyzeResponse = {
+  provider: "heuristic" | "clawfi" | "hybrid";
+  contractAddress: string;
+  score: number;
+  level: "low" | "medium" | "high";
+  owner: {
+    address: string | null;
+    renounced: boolean;
+  };
+  proxy: {
+    detected: boolean;
+    implementation: string | null;
+  };
+  mechanics: string[];
+  redFlags: string[];
+  explanation: string;
+  hiddenMechanics: string[];
+};
+
+export async function analyzeContractClient(address: string): Promise<AiAnalyzeResponse> {
+  const res = await fetch("/api/ai/analyze", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ address }),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Analyze request failed: ${res.status}`);
+  }
+  return (await res.json()) as AiAnalyzeResponse;
+}
