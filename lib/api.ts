@@ -135,6 +135,14 @@ export type MoralisWalletTx = {
   receipt_status?: string;
 };
 
+export type MoralisTokenOwner = {
+  owner_address: string;
+  balance: string;
+  balance_formatted?: string;
+  usd_value?: number | null;
+  percentage_relative_to_total_supply?: number | null;
+};
+
 export async function fetchMoralisWalletHistory(address: string, limit = 20): Promise<MoralisWalletTx[]> {
   const key = process.env.MORALIS_API_KEY || process.env.NEXT_PUBLIC_MORALIS_KEY;
   if (!key) {
@@ -155,6 +163,29 @@ export async function fetchMoralisWalletHistory(address: string, limit = 20): Pr
   }
 
   const data = (await res.json()) as { result?: MoralisWalletTx[] };
+  return data.result ?? [];
+}
+
+export async function fetchMoralisTokenOwners(address: string, limit = 25): Promise<MoralisTokenOwner[]> {
+  const key = process.env.MORALIS_API_KEY || process.env.NEXT_PUBLIC_MORALIS_KEY;
+  if (!key) {
+    throw new Error("MORALIS_API_KEY or NEXT_PUBLIC_MORALIS_KEY is missing.");
+  }
+
+  const url = `${MORALIS_BASE}/erc20/${address}/owners?chain=0x171&order=DESC&limit=${limit}`;
+  const res = await fetch(url, {
+    headers: {
+      Accept: "application/json",
+      "X-API-Key": key,
+    },
+    next: { revalidate: 30 },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Moralis token owners request failed: ${res.status}`);
+  }
+
+  const data = (await res.json()) as { result?: MoralisTokenOwner[] };
   return data.result ?? [];
 }
 
@@ -258,4 +289,38 @@ export async function fetchExplorerSnapshotClient(query: string): Promise<Explor
 
 export async function fetchOverviewSnapshotClient(): Promise<OverviewSnapshot> {
   return fetchJson<OverviewSnapshot>("/api/overview");
+}
+
+export type CoinDetailsApiResponse = {
+  address: string;
+  token: {
+    symbol: string;
+    name: string;
+    imageUrl: string | null;
+  };
+  price: {
+    usd: number | null;
+    change24h: number | null;
+    marketCapUsd: number | null;
+    fdvUsd: number | null;
+    liquidityUsd: number | null;
+    volume24hUsd: number | null;
+    pairAddress: string | null;
+    dexId: string | null;
+    quoteSymbol: string | null;
+  };
+  holders: {
+    total: number | null;
+    top: Array<{
+      rank: number;
+      address: string;
+      balance: string;
+      percent: number | null;
+      usdValue: number | null;
+    }>;
+  };
+};
+
+export async function fetchCoinDetailsClient(address: string): Promise<CoinDetailsApiResponse> {
+  return fetchJson<CoinDetailsApiResponse>(`/api/coin/${address}`);
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { fetchOverviewSnapshotClient } from "@/lib/api";
@@ -27,6 +28,14 @@ const iconMap: Record<string, string> = {
   PLSX: "/coins/svg/plsx.svg",
   INC: "/coins/svg/inc.svg",
   HEX: "/coins/svg/hex.svg",
+};
+
+const tokenAddressMap: Record<string, string> = {
+  HORSE: "0x8536949300886be15d6033da56473e7c368c8df2",
+  PLS: "0xa1077a294dde1b09bb078844df40758a5d0f9a27",
+  PLSX: "0x95b303987a60c71504d99aa1b13b4da07b0790ab",
+  INC: "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d",
+  HEX: "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39",
 };
 
 function formatPrice(value: number | null): string {
@@ -226,7 +235,9 @@ export default function HomePage() {
             </div>
 
             <div className="text-right text-fire-text/70">
-              <span className="text-2xl">&gt;</span>
+              <Link className="text-2xl transition hover:text-fire-accent" href={`/coins/${tokenAddressMap.PLS}`}>
+                &gt;
+              </Link>
             </div>
           </div>
         </article>
@@ -250,7 +261,11 @@ export default function HomePage() {
           const liquidityText = formatCompactUsd(live?.liquidityUsd);
 
           return (
-            <article key={coin.symbol} className="rounded-3xl border border-white/15 bg-black/45 px-6 py-5">
+            <Link
+              key={coin.symbol}
+              href={`/coins/${tokenAddressMap[coin.symbol]}`}
+              className="block rounded-3xl border border-white/15 bg-black/45 px-6 py-5 transition hover:border-fire-accent/50 hover:shadow-[0_0_30px_rgba(255,106,0,0.15)]"
+            >
               <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="rounded-lg border border-white/15 bg-black/65 p-1">
@@ -317,7 +332,7 @@ export default function HomePage() {
               </div>
 
               <p className="pt-4 text-center text-base text-fire-text/55">Liquidity: {liquidityText}</p>
-            </article>
+            </Link>
           );
         })}
       </section>

@@ -1,29 +1,35 @@
+import Link from "next/link";
 import CoinCard from "@/components/CoinCard";
 
-const sectionCoins = [
-  { logo: "PLS", symbol: "Overview", price: "$0.000145", change: 2.1 },
-  { logo: "BBL", symbol: "Bubbles", price: "$0.012", change: -0.8 },
-  { logo: "STB", symbol: "Stables", price: "$1.00", change: 0 },
-  { logo: "TRD", symbol: "Trends", price: "$0.42", change: 5.2 },
-  { logo: "MNT", symbol: "Mint", price: "$0.09", change: -2.3 },
-  { logo: "MOON", symbol: "Moon calculator", price: "2.6x", change: 11.4 },
+const trackedCoins = [
+  { logo: "HORSE", symbol: "HORSE", price: "Live", change: 0.0, address: "0x8536949300886be15d6033da56473e7c368c8df2" },
+  { logo: "PLS", symbol: "PLS", price: "Live", change: 0.0, address: "0xa1077a294dde1b09bb078844df40758a5d0f9a27" },
+  { logo: "PLSX", symbol: "PLSX", price: "Live", change: 0.0, address: "0x95b303987a60c71504d99aa1b13b4da07b0790ab" },
+  { logo: "INC", symbol: "INC", price: "Live", change: 0.0, address: "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d" },
+  { logo: "HEX", symbol: "HEX", price: "Live", change: 0.0, address: "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39" },
 ];
 
 export default function CoinsPage() {
   return (
     <div className="space-y-6">
       <h1 className="section-title">Coins</h1>
+      <p className="text-sm text-fire-text/70">
+        Click any tracked token below to open its dedicated analytics page with chart, liquidity, and holder data.
+      </p>
+
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {sectionCoins.map((coin) => (
-          <CoinCard key={coin.symbol} {...coin} />
+        {trackedCoins.map((coin) => (
+          <Link key={coin.symbol} href={`/coins/${coin.address}`} className="block">
+            <CoinCard logo={coin.logo} symbol={coin.symbol} price={coin.price} change={coin.change} />
+          </Link>
         ))}
       </div>
 
       <section className="glass p-5">
-        <h2 className="mb-2 text-lg font-semibold">Moon Calculator</h2>
+        <h2 className="mb-2 text-lg font-semibold">Custom Token Lookup</h2>
         <p className="text-sm text-fire-text/75">
-          Estimate upside by entering target price, holdings, and projected market cap conditions. This module can be
-          extended with live Dexscreener pair data from <code>lib/api.ts</code>.
+          You can open any token page manually using the URL format:
+          <code className="ml-1">/coins/0xYourTokenAddress</code>.
         </p>
       </section>
     </div>
