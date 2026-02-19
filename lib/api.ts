@@ -373,3 +373,90 @@ export async function analyzeContractClient(address: string): Promise<AiAnalyzeR
   }
   return (await res.json()) as AiAnalyzeResponse;
 }
+
+export type WalletProfileApiResponse = {
+  wallet: string;
+  overview: {
+    totalPortfolioUsd: number;
+    totalPortfolioPls: number;
+    tokenCount: number;
+    lpPositionCount: number;
+    stakedPositionCount: number;
+    nftCount: number;
+    netInflowUsdApprox: number;
+    netOutflowUsdApprox: number;
+    change7dPctApprox: number;
+    change30dPctApprox: number;
+  };
+  tokens: Array<{
+    tokenAddress: string;
+    symbol: string;
+    balance: number;
+    usdValue: number;
+    portfolioSharePct: number;
+    liquidityDepthUsd: number | null;
+    holderConcentration: "low" | "medium" | "high";
+    riskRating: "High" | "Moderate" | "Speculative" | "High Risk";
+    burnedPct: number | null;
+    ownerStatus: "renounced" | "owner_active" | "unknown";
+  }>;
+  lpPositions: Array<{
+    pairLabel: string;
+    sharePct: number;
+    estimatedUsdValue: number;
+    impermanentLossEstimatePct: number;
+    liquidityDepthUsd: number | null;
+  }>;
+  stakedPositions: Array<{ protocol: string; amountUsd: number }>;
+  nftPositions: Array<{ contract: string; tokenId: string; name: string }>;
+  behaviorTimeline: Array<{
+    hash: string;
+    kind: "swap" | "transfer" | "contract_interaction";
+    timestamp: string;
+    valueUsdApprox: number;
+    from: string;
+    to: string;
+  }>;
+};
+
+export type WalletProfileAiResponse = {
+  riskScore: number;
+  behaviorSummary: string;
+  concentrationRisk: string;
+  liquidityExposure: string;
+  tradingPattern: string;
+  redFlags: string[];
+  whaleActivity: string[];
+  opportunitySignals: string[];
+};
+
+export type EcosystemApiResponse = {
+  topVolumeTokens: Array<{ symbol: string; address: string; volume24hUsd: number; priceUsd: number | null }>;
+  liquidityGrowth: Array<{ symbol: string; address: string; liquidityUsd: number; growth24hPct: number }>;
+  holderGrowth: Array<{ symbol: string; address: string; holdersApprox: number; growth7dPctApprox: number }>;
+  newContracts: Array<{ address: string; deployedAt: string; label: string }>;
+  whaleMovements: Array<{ wallet: string; token: string; amountUsd: number; direction: "in" | "out"; timestamp: string }>;
+  burnLeaderboard: Array<{ symbol: string; burnedUsdApprox: number }>;
+  riskHeatmap: Array<{ symbol: string; riskScore: number; trustLevel: "High" | "Moderate" | "Speculative" | "High Risk" }>;
+};
+
+export async function fetchProfileSnapshotClient(address: string): Promise<WalletProfileApiResponse> {
+  return fetchJson<WalletProfileApiResponse>(`/api/profile/${address}`);
+}
+
+export async function analyzeProfileClient(address: string): Promise<WalletProfileAiResponse> {
+  const res = await fetch("/api/ai/profile-analyze", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ address }),
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Profile analyze request failed: ${res.status}`);
+  }
+  return (await res.json()) as WalletProfileAiResponse;
+}
+
+export async function fetchEcosystemSnapshotClient(): Promise<EcosystemApiResponse> {
+  return fetchJson<EcosystemApiResponse>("/api/ecosystem");
+}

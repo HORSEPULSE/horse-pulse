@@ -9,6 +9,7 @@ const links = [
   { label: "Stats", href: "/stats" },
   { label: "Apps", href: "/apps" },
   { label: "Coins", href: "/coins" },
+  { label: "Ecosystem", href: "/ecosystem" },
   { label: "Buy", href: "#" },
   { label: "Portfolio", href: "/wallet" },
   { label: "Swap", href: "#" },

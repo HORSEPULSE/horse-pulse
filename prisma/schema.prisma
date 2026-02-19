@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model WalletProfileCache {
+  id          String   @id @default(cuid())
+  wallet      String   @unique
+  payload     Json
+  refreshedAt DateTime @updatedAt
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+}
+
+model ContractRiskCache {
+  id              String   @id @default(cuid())
+  contractAddress String   @unique
+  payload         Json
+  score           Int
+  trustLevel      String
+  refreshedAt     DateTime @updatedAt
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+}
+
+model EcosystemSnapshotCache {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  payload     Json
+  refreshedAt DateTime @updatedAt
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+}
+
+model FeatureFlagConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  enabled     Boolean  @default(true)
+  description String?
+  updatedBy   String?
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model WalletWatchlist {
+  id        String   @id @default(cuid())
+  wallet    String
+  owner     String
+  label     String?
+  isPrivate Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([owner])
+  @@index([wallet])
+}
+
+model AiScanLog {
+  id         String   @id @default(cuid())
+  scanner    String
+  target     String
+  targetType String
+  provider   String
+  score      Int?
+  flags      Json?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([scanner, createdAt])
+  @@index([target, createdAt])
+}
+
+model WhaleAlertSubscription {
+  id              String   @id @default(cuid())
+  wallet          String
+  subscriber      String
+  minAmountUsd    Float
+  enabled         Boolean  @default(true)
+  webhookUrl      String?
+  notificationKey String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([subscriber, enabled])
+  @@index([wallet])
+}
+

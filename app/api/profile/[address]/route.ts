@@ -1,0 +1,32 @@
+import { NextResponse } from "next/server";
+import { profileParamsSchema } from "@/lib/schemas/api";
+import { getClientIp, assertRateLimit } from "@/lib/security/rate-limit";
+import { getWalletProfileSnapshot } from "@/lib/services/profile-engine";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+export async function GET(request: Request, { params }: { params: { address: string } }) {
+  const ip = getClientIp(request);
+  const limit = assertRateLimit(`profile:${ip}`, 70, 60_000);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Rate limit exceeded. Try again shortly." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(limit.resetInMs / 1000)) } },
+    );
+  }
+
+  const parsed = profileParamsSchema.safeParse(params);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  }
+
+  try {
+    const data = await getWalletProfileSnapshot(parsed.data.address);
+    return NextResponse.json(data);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to load wallet profile.";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
