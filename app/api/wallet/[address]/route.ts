@@ -14,6 +14,20 @@ function shortAddress(value: string): string {
   return `${value.slice(0, 6)}...${value.slice(-4)}`;
 }
 
+function unitsToNumber(value: string, decimals: number, precision = 6): number {
+  try {
+    const raw = BigInt(value || "0");
+    const base = 10n ** BigInt(Math.max(decimals, 0));
+    const whole = raw / base;
+    const fraction = raw % base;
+    const fractionStr = fraction.toString().padStart(Math.max(decimals, 1), "0").slice(0, precision);
+    const normalized = Number(`${whole.toString()}.${fractionStr || "0"}`);
+    return Number.isFinite(normalized) ? normalized : 0;
+  } catch {
+    return 0;
+  }
+}
+
 export async function GET(_: Request, { params }: { params: { address: string } }) {
   const address = params.address?.trim();
   if (!address || !isAddress(address)) {
@@ -30,8 +44,7 @@ export async function GET(_: Request, { params }: { params: { address: string } 
     const holdings = balances
       .map((token) => {
         const decimals = Number(token.decimals || "18");
-        const raw = Number(token.balance || "0");
-        const balance = Number.isFinite(raw) ? raw / 10 ** decimals : 0;
+        const balance = unitsToNumber(token.balance || "0", decimals);
         const usdValue = Number(token.usd_value ?? 0);
         return {
           tokenAddress: token.token_address,
@@ -46,16 +59,16 @@ export async function GET(_: Request, { params }: { params: { address: string } 
       .slice(0, 50);
 
     const estimatedPortfolioUsd = holdings.reduce((acc, item) => acc + item.usdValue, 0);
-    const nativeBalancePls = Number(nativeBalanceWei) / 1e18;
+    const nativeBalancePls = unitsToNumber(nativeBalanceWei.toString(), 18);
 
     const transactions = txs.map((tx) => {
-      const wei = Number(tx.value ?? "0");
+      const valuePls = unitsToNumber(tx.value ?? "0", 18);
       return {
         hash: tx.hash ?? "",
         from: shortAddress(tx.from_address ?? "0x0000000000000000000000000000000000000000"),
         to: shortAddress(tx.to_address ?? "0x0000000000000000000000000000000000000000"),
         timestamp: tx.block_timestamp ?? "",
-        valuePls: Number.isFinite(wei) ? wei / 1e18 : 0,
+        valuePls,
         status: tx.receipt_status ?? "unknown",
       };
     });

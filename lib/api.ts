@@ -101,11 +101,9 @@ export type MoralisTokenBalance = {
 };
 
 export async function fetchMoralisWalletBalances(address: string): Promise<MoralisTokenBalance[]> {
-  const key = process.env.MORALIS_API_KEY || process.env.NEXT_PUBLIC_MORALIS_KEY;
-
-  // Moralis API key is required here. Prefer MORALIS_API_KEY (server-only), fallback NEXT_PUBLIC_MORALIS_KEY.
+  const key = process.env.MORALIS_API_KEY;
   if (!key) {
-    throw new Error("MORALIS_API_KEY or NEXT_PUBLIC_MORALIS_KEY is missing.");
+    throw new Error("MORALIS_API_KEY is missing.");
   }
 
   const url = `${MORALIS_BASE}/wallets/${address}/tokens?chain=0x171&token_prices=true`;
@@ -144,9 +142,9 @@ export type MoralisTokenOwner = {
 };
 
 export async function fetchMoralisWalletHistory(address: string, limit = 20): Promise<MoralisWalletTx[]> {
-  const key = process.env.MORALIS_API_KEY || process.env.NEXT_PUBLIC_MORALIS_KEY;
+  const key = process.env.MORALIS_API_KEY;
   if (!key) {
-    throw new Error("MORALIS_API_KEY or NEXT_PUBLIC_MORALIS_KEY is missing.");
+    throw new Error("MORALIS_API_KEY is missing.");
   }
 
   const url = `${MORALIS_BASE}/wallets/${address}/history?chain=0x171&order=DESC&limit=${limit}`;
@@ -166,10 +164,13 @@ export async function fetchMoralisWalletHistory(address: string, limit = 20): Pr
   return data.result ?? [];
 }
 
-export async function fetchMoralisTokenOwners(address: string, limit = 25): Promise<MoralisTokenOwner[]> {
-  const key = process.env.MORALIS_API_KEY || process.env.NEXT_PUBLIC_MORALIS_KEY;
+export async function fetchMoralisTokenOwners(
+  address: string,
+  limit = 25,
+): Promise<{ owners: MoralisTokenOwner[]; total: number | null }> {
+  const key = process.env.MORALIS_API_KEY;
   if (!key) {
-    throw new Error("MORALIS_API_KEY or NEXT_PUBLIC_MORALIS_KEY is missing.");
+    throw new Error("MORALIS_API_KEY is missing.");
   }
 
   const url = `${MORALIS_BASE}/erc20/${address}/owners?chain=0x171&order=DESC&limit=${limit}`;
@@ -185,14 +186,17 @@ export async function fetchMoralisTokenOwners(address: string, limit = 25): Prom
     throw new Error(`Moralis token owners request failed: ${res.status}`);
   }
 
-  const data = (await res.json()) as { result?: MoralisTokenOwner[] };
-  return data.result ?? [];
+  const data = (await res.json()) as { result?: MoralisTokenOwner[]; total?: number };
+  return {
+    owners: data.result ?? [],
+    total: Number.isFinite(data.total) ? Number(data.total) : null,
+  };
 }
 
 export async function fetchMoralisNativeBalance(address: string): Promise<bigint> {
-  const key = process.env.MORALIS_API_KEY || process.env.NEXT_PUBLIC_MORALIS_KEY;
+  const key = process.env.MORALIS_API_KEY;
   if (!key) {
-    throw new Error("MORALIS_API_KEY or NEXT_PUBLIC_MORALIS_KEY is missing.");
+    throw new Error("MORALIS_API_KEY is missing.");
   }
 
   const url = `${MORALIS_BASE}/wallets/${address}/balance?chain=0x171`;
@@ -311,6 +315,7 @@ export type CoinDetailsApiResponse = {
   };
   holders: {
     total: number | null;
+    sampled: number;
     top: Array<{
       rank: number;
       address: string;

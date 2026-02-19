@@ -20,7 +20,7 @@ type FeaturedPriceItem = {
   sourcePairs?: string[];
 };
 
-const frames = ["5m", "1h", "6h", "24h", "7d", "30d", "90d", "ATL"];
+const frames = ["5m", "1h", "6h", "24h"] as const;
 
 const iconMap: Record<string, string> = {
   HORSE: "/fire_horse_icon_512.png",
@@ -28,6 +28,7 @@ const iconMap: Record<string, string> = {
   PLSX: "/coins/svg/plsx.svg",
   INC: "/coins/svg/inc.svg",
   HEX: "/coins/svg/hex.svg",
+  EHEX: "/coins/svg/hex.svg",
 };
 
 const tokenAddressMap: Record<string, string> = {
@@ -36,6 +37,7 @@ const tokenAddressMap: Record<string, string> = {
   PLSX: "0x95b303987a60c71504d99aa1b13b4da07b0790ab",
   INC: "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d",
   HEX: "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39",
+  EHEX: "0x57fde0a71132198bbec939b98976993d8d89d225",
 };
 
 function formatPrice(value: number | null): string {
@@ -54,7 +56,7 @@ function formatCompactUsd(value: number | null | undefined): string {
 export default function HomePage() {
   const router = useRouter();
   const [query, setQuery] = useState("");
-  const [activeFrame, setActiveFrame] = useState("ATL");
+  const [activeFrame, setActiveFrame] = useState<(typeof frames)[number]>("24h");
   const [showUsd, setShowUsd] = useState(true);
   const [excludeOA, setExcludeOA] = useState(false);
   const [featuredPrices, setFeaturedPrices] = useState<Record<string, FeaturedPriceItem>>({});
@@ -152,6 +154,7 @@ export default function HomePage() {
       { symbol: "PLSX", subtitle: "PulseX", supply: "142T", burned: "1.67T", burnedPct: "1.18%" },
       { symbol: "INC", subtitle: "Incentive", supply: "56M", burned: "121K", burnedPct: "0.216%" },
       { symbol: "HEX", subtitle: "on PulseChain", supply: "669B", burned: "N/A", burnedPct: "" },
+      { symbol: "EHEX", subtitle: "HEX from Ethereum", supply: "N/A", burned: "N/A", burnedPct: "" },
     ],
     [],
   );
@@ -250,6 +253,7 @@ export default function HomePage() {
       >
         {visibleCoins.map((coin) => {
           const live = featuredPrices[coin.symbol];
+          const ehexLive = featuredPrices.EHEX;
           const priceText = showUsd
             ? formatPrice(live?.priceUsd ?? null)
             : live?.priceNative && live?.quoteSymbol
@@ -259,6 +263,17 @@ export default function HomePage() {
           const change = typeof selectedChange === "number" ? `${selectedChange >= 0 ? "+" : ""}${selectedChange.toFixed(1)}%` : "N/A";
           const marketCapText = formatCompactUsd(live?.marketCapUsd);
           const liquidityText = formatCompactUsd(live?.liquidityUsd);
+
+          const detailLine =
+            coin.symbol === "HORSE"
+              ? "HORSE meme coin on PulseChain"
+              : coin.symbol === "PLSX"
+                ? "0.75 PLS (1:1.34)"
+                : coin.symbol === "INC"
+                  ? "41,550 PLS"
+                  : coin.symbol === "HEX"
+                    ? `155 PLS | incl. eHEX: ${formatPrice(ehexLive?.priceUsd ?? null)}`
+                    : "eHEX / WPLS";
 
           return (
             <Link
@@ -282,26 +297,20 @@ export default function HomePage() {
               </div>
 
               <div className="border-y border-white/10 py-4">
-                <p className="min-w-0 text-4xl font-semibold leading-none text-white [font-variant-numeric:tabular-nums] max-md:text-2xl">
+                <p className="min-w-0 pr-2 text-[2.15rem] font-semibold leading-none text-white [font-variant-numeric:tabular-nums] max-md:text-2xl">
                   {priceText}
                 </p>
                 <div className="mt-2 flex justify-end">
                   <p
-                    className={`rounded-full px-2 py-0.5 text-xl font-semibold leading-none ${
+                    className={`rounded-full px-2 py-0.5 text-lg font-semibold leading-none ${
                       change.startsWith("-") ? "bg-rose-500/15 text-rose-400" : "bg-emerald-500/15 text-emerald-400"
-                    } max-md:text-lg`}
+                    } max-md:text-base`}
                   >
                     {change}
                   </p>
                 </div>
                 <p className="mt-1 text-base text-fire-text/50">
-                  {coin.symbol === "HORSE"
-                    ? "HORSE meme coin on PulseChain"
-                    : coin.symbol === "PLSX"
-                      ? "0.75 PLS (1:1.34)"
-                      : coin.symbol === "INC"
-                        ? "41,550 PLS"
-                        : "155 PLS | incl. eHEX"}
+                  {detailLine}
                 </p>
                 <p className="mt-1 text-xs text-fire-text/45">
                   {live?.pairCount ? `${live.pairCount} pools` : "No pool depth"} |{" "}
@@ -312,19 +321,19 @@ export default function HomePage() {
               <div className="grid grid-cols-2 gap-x-4 gap-y-3 border-b border-white/10 py-4 text-center">
                 <div className="min-w-0">
                   <p className="text-sm text-fire-text/50">Market Cap</p>
-                  <p className="whitespace-nowrap text-2xl font-semibold leading-none text-white [font-variant-numeric:tabular-nums] max-md:text-xl">
+                  <p className="text-xl font-semibold leading-none text-white [font-variant-numeric:tabular-nums] max-md:text-lg">
                     {marketCapText}
                   </p>
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm text-fire-text/50">Supply</p>
-                  <p className="whitespace-nowrap text-2xl font-semibold leading-none text-white [font-variant-numeric:tabular-nums] max-md:text-xl">
+                  <p className="text-xl font-semibold leading-none text-white [font-variant-numeric:tabular-nums] max-md:text-lg">
                     {coin.supply}
                   </p>
                 </div>
                 <div className="col-span-2 min-w-0">
                   <p className="text-sm text-fire-text/50">Burned</p>
-                  <p className="whitespace-nowrap text-2xl font-semibold leading-none text-white [font-variant-numeric:tabular-nums] max-md:text-xl">
+                  <p className="text-xl font-semibold leading-none text-white [font-variant-numeric:tabular-nums] max-md:text-lg">
                     {coin.burned}
                   </p>
                   {coin.burnedPct ? <p className="text-sm text-fire-text/50">{coin.burnedPct}</p> : null}

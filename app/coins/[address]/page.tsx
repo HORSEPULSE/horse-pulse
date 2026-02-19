@@ -69,7 +69,7 @@ export default function CoinDetailPage({ params }: { params: { address: string }
     };
   }, [address]);
 
-  const icon = knownIcons[address] ?? "/coins/svg/horse.svg";
+  const icon = knownIcons[address] ?? null;
   const chartUrl = useMemo(() => {
     const pair = data?.price.pairAddress;
     if (!pair) return null;
@@ -82,9 +82,9 @@ export default function CoinDetailPage({ params }: { params: { address: string }
     const whale = rows.filter((h) => normalizeNum(h.usdValue) >= 1_000 && normalizeNum(h.usdValue) < 10_000).length;
     const shark = rows.filter((h) => normalizeNum(h.usdValue) >= 100 && normalizeNum(h.usdValue) < 1_000).length;
     const dolphin = rows.filter((h) => normalizeNum(h.usdValue) > 0 && normalizeNum(h.usdValue) < 100).length;
-    const sample = rows.length;
+    const sample = data?.holders.sampled ?? rows.length;
     return { poseidon, whale, shark, dolphin, sample };
-  }, [data?.holders.top]);
+  }, [data?.holders.top, data?.holders.sampled]);
 
   const burnRow = useMemo(() => {
     const rows = data?.holders.top ?? [];
@@ -122,7 +122,13 @@ export default function CoinDetailPage({ params }: { params: { address: string }
             <div className="mb-5 flex items-start justify-between gap-4 max-md:flex-col">
               <div className="flex items-center gap-3">
                 <div className="rounded-xl border border-white/15 bg-black/50 p-1">
-                  <Image src={icon} alt={data?.token.symbol ?? "Token"} width={40} height={40} />
+                  {icon ? (
+                    <Image src={icon} alt={data?.token.symbol ?? "Token"} width={40} height={40} />
+                  ) : (
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-black/60 text-sm font-semibold text-fire-accent">
+                      {(data?.token.symbol ?? "T").slice(0, 2).toUpperCase()}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <h1 className="text-3xl font-semibold text-white" style={{ fontFamily: "var(--font-title)" }}>
@@ -211,7 +217,10 @@ export default function CoinDetailPage({ params }: { params: { address: string }
             <div className="mb-5 grid gap-4 md:grid-cols-2">
               <article className="rounded-2xl border border-white/10 bg-black/30 p-4">
                 <p className="text-sm text-fire-text/60">Total Holders</p>
-                <p className="mt-1 text-4xl font-semibold text-white">{data?.holders.total?.toLocaleString() ?? "N/A"}</p>
+                <p className="mt-1 text-4xl font-semibold text-white">
+                  {data?.holders.total?.toLocaleString() ?? `Sample ${data?.holders.sampled ?? 0}`}
+                </p>
+                {data?.holders.total ? null : <p className="mt-1 text-xs text-fire-text/50">Full holder total unavailable on current response.</p>}
               </article>
               <article className="rounded-2xl border border-white/10 bg-black/30 p-4">
                 <p className="text-sm text-fire-text/60">Average Holdings</p>

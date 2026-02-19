@@ -59,11 +59,12 @@ export async function GET(_: Request, { params }: { params: { address: string } 
     }
     const address = normalizeAddress(raw);
 
-    const [pairs, owners] = await Promise.all([
+    const [pairs, ownersPayload] = await Promise.all([
       fetchDexPairsByTokenAddress(address),
-      fetchMoralisTokenOwners(address, 50).catch(() => []),
+      fetchMoralisTokenOwners(address, 50).catch(() => ({ owners: [], total: null })),
     ]);
 
+    const owners = ownersPayload.owners;
     const bestPair = pickBestPulsePair(pairs);
     const topHolders = mapTopHolders(owners);
 
@@ -86,7 +87,8 @@ export async function GET(_: Request, { params }: { params: { address: string } 
         quoteSymbol: bestPair?.quoteToken?.symbol ?? null,
       },
       holders: {
-        total: owners.length || null,
+        total: ownersPayload.total,
+        sampled: owners.length,
         top: topHolders,
       },
     });

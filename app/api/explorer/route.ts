@@ -18,6 +18,33 @@ function shortAddress(value: string): string {
   return `${value.slice(0, 6)}...${value.slice(-4)}`;
 }
 
+function hexToBigInt(value?: string): bigint {
+  try {
+    if (!value) return 0n;
+    return BigInt(value);
+  } catch {
+    return 0n;
+  }
+}
+
+function decimalToBigInt(value?: string): bigint {
+  try {
+    if (!value) return 0n;
+    return BigInt(value);
+  } catch {
+    return 0n;
+  }
+}
+
+function unitsToNumber(value: bigint, decimals: number, precision = 6): number {
+  const base = 10n ** BigInt(Math.max(decimals, 0));
+  const whole = value / base;
+  const fraction = value % base;
+  const fractionStr = fraction.toString().padStart(Math.max(decimals, 1), "0").slice(0, precision);
+  const parsed = Number(`${whole.toString()}.${fractionStr || "0"}`);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 async function callRpc<T>(method: string, params: unknown[] = []): Promise<T> {
   const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL;
   if (!rpcUrl) {
@@ -69,14 +96,14 @@ export async function GET(request: Request) {
         details: [
           { label: "Type", value: "Transaction" },
           { label: "Status", value: receipt?.status === "0x1" ? "Success" : "Pending/Failed" },
-          { label: "Value", value: `${((Number(tx?.value ?? "0") || 0) / 1e18).toFixed(6)} PLS` },
-          { label: "Gas Price", value: `${((Number(tx?.gasPrice ?? "0") || 0) / 1e9).toFixed(4)} gwei` },
+          { label: "Value", value: `${unitsToNumber(hexToBigInt(tx?.value), 18).toFixed(6)} PLS` },
+          { label: "Gas Price", value: `${unitsToNumber(hexToBigInt(tx?.gasPrice), 9).toFixed(4)} gwei` },
         ],
         transactions: [
           {
             hash: query,
             from: shortAddress(tx?.from ?? "0x0000000000000000000000000000000000000000"),
-            amount: `${((Number(tx?.value ?? "0") || 0) / 1e18).toFixed(6)} PLS`,
+            amount: `${unitsToNumber(hexToBigInt(tx?.value), 18).toFixed(6)} PLS`,
           },
         ],
         holders: [
@@ -118,7 +145,7 @@ export async function GET(request: Request) {
         transactions: txs.map((tx) => ({
           hash: tx.hash ?? "",
           from: shortAddress(tx.from_address ?? "0x0000000000000000000000000000000000000000"),
-          amount: `${((Number(tx.value ?? "0") || 0) / 1e18).toFixed(4)} PLS`,
+          amount: `${unitsToNumber(decimalToBigInt(tx.value), 18).toFixed(4)} PLS`,
           timestamp: tx.block_timestamp ?? "",
         })),
         holders: topTokens.map((token) => ({

@@ -24,8 +24,6 @@ npm install
 ```bash
 NEXT_PUBLIC_RPC_URL=https://your-pulsechain-rpc-url
 MORALIS_API_KEY=your_moralis_api_key
-# Optional fallback if needed:
-# NEXT_PUBLIC_MORALIS_KEY=your_moralis_api_key
 ```
 
 ## Run Locally
@@ -49,8 +47,7 @@ npm run start
 2. Import it into Vercel.
 3. Add these environment variables in Vercel Project Settings:
 - `NEXT_PUBLIC_RPC_URL`
-- `MORALIS_API_KEY` (recommended)
-- `NEXT_PUBLIC_MORALIS_KEY` (optional fallback)
+- `MORALIS_API_KEY`
 4. Deploy.
 
 ## API Integration
@@ -58,7 +55,7 @@ npm run start
 All API endpoints are implemented in `lib/api.ts`:
 - Dexscreener token pricing and pair discovery
 - PulseChain RPC helpers for block and gas data
-- Moralis wallet token balances (`NEXT_PUBLIC_MORALIS_KEY` required)
+- Moralis wallet/token endpoints (`MORALIS_API_KEY` required)
 
 ## Branding Assets
 

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { fetchDexPairsByTokenAddress, type DexPair } from "@/lib/api";
 
-type FeaturedSymbol = "PLS" | "PLSX" | "HEX" | "INC" | "HORSE";
-type Frame = "5m" | "1h" | "6h" | "24h" | "7d" | "30d" | "90d" | "ATL";
+type FeaturedSymbol = "PLS" | "PLSX" | "HEX" | "INC" | "HORSE" | "EHEX";
+type Frame = "5m" | "1h" | "6h" | "24h";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -133,7 +133,9 @@ function aggregatePairs(pairs: PairWithChange[], frame: Frame) {
 
 export async function GET(request: Request) {
   try {
-    const requestedFrame = (new URL(request.url).searchParams.get("frame") ?? "24h") as Frame;
+    const frameParam = new URL(request.url).searchParams.get("frame");
+    const requestedFrame: Frame =
+      frameParam === "5m" || frameParam === "1h" || frameParam === "6h" || frameParam === "24h" ? frameParam : "24h";
 
     const tokenMap: Record<FeaturedSymbol, string> = {
       PLS: "0xa1077a294dde1b09bb078844df40758a5d0f9a27",
@@ -141,6 +143,7 @@ export async function GET(request: Request) {
       HEX: "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39",
       INC: "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d",
       HORSE: "0x8536949300886be15d6033da56473e7c368c8df2",
+      EHEX: "0x57fde0a71132198bbec939b98976993d8d89d225",
     };
 
     const results = await Promise.all(
