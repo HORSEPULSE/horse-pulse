@@ -208,7 +208,6 @@ export default function HomePage() {
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {featuredCoins.map((coin) => {
           const live = featuredPrices[coin.symbol];
-          const ehexLive = featuredPrices.EHEX;
           const wplsValue = live?.priceUsd && plsUsd && plsUsd > 0 ? live.priceUsd / plsUsd : null;
           const priceText = showUsd
             ? formatPrice(live?.priceUsd ?? null)
@@ -228,7 +227,7 @@ export default function HomePage() {
                 : coin.symbol === "INC"
                   ? "41,550 PLS"
                   : coin.symbol === "HEX"
-                    ? `155 PLS | incl. eHEX: ${formatPrice(ehexLive?.priceUsd ?? null)}`
+                    ? "155 PLS"
                     : coin.symbol === "EHEX"
                       ? "eHEX / WPLS"
                       : coin.symbol === "WBTC"
