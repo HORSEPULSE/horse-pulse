@@ -57,6 +57,14 @@ function formatCompactUsd(value: number | null | undefined): string {
   return `$${value.toLocaleString(undefined, { notation: "compact", maximumFractionDigits: 2 })}`;
 }
 
+function formatWpls(value: number | null | undefined): string {
+  if (value === null || value === undefined || !Number.isFinite(value)) return "N/A";
+  if (value >= 1_000_000) return `${value.toLocaleString(undefined, { maximumFractionDigits: 0 })} WPLS`;
+  if (value >= 1_000) return `${value.toLocaleString(undefined, { maximumFractionDigits: 2 })} WPLS`;
+  if (value >= 1) return `${value.toFixed(4)} WPLS`;
+  return `${value.toFixed(6)} WPLS`;
+}
+
 export default function HomePage() {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -140,11 +148,10 @@ export default function HomePage() {
     }
   }, [featuredPrices, activeFrame]);
 
+  const plsUsd = featuredPrices.PLS?.priceUsd ?? null;
   const topPrice = showUsd
-    ? formatPrice(featuredPrices.PLS?.priceUsd ?? null)
-    : featuredPrices.PLS?.priceNative && featuredPrices.PLS?.quoteSymbol
-      ? `${featuredPrices.PLS.priceNative.toFixed(6)} ${featuredPrices.PLS.quoteSymbol}`
-      : "N/A";
+    ? formatPrice(plsUsd)
+    : formatWpls(plsUsd && plsUsd > 0 ? 1 : null);
   const topMarketCapFromFeatured = formatCompactUsd(featuredPrices.PLS?.marketCapUsd);
   const topMarketCap = topMarketCapFromFeatured !== "N/A" ? topMarketCapFromFeatured : overviewMarketCap ?? "N/A";
   const topConfidence = featuredPrices.PLS?.confidence ?? "thin";
@@ -202,11 +209,10 @@ export default function HomePage() {
         {featuredCoins.map((coin) => {
           const live = featuredPrices[coin.symbol];
           const ehexLive = featuredPrices.EHEX;
+          const wplsValue = live?.priceUsd && plsUsd && plsUsd > 0 ? live.priceUsd / plsUsd : null;
           const priceText = showUsd
             ? formatPrice(live?.priceUsd ?? null)
-            : live?.priceNative && live?.quoteSymbol
-              ? `${live.priceNative.toFixed(6)} ${live.quoteSymbol}`
-              : "N/A";
+            : formatWpls(wplsValue);
           const selectedChange = typeof live?.changeSelected === "number" ? live.changeSelected : live?.change24h;
           const change = typeof selectedChange === "number" ? `${selectedChange >= 0 ? "+" : ""}${selectedChange.toFixed(1)}%` : "N/A";
           const marketCapText = formatCompactUsd(live?.marketCapUsd);
