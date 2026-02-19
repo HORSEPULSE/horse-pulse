@@ -7,6 +7,9 @@ const trackedCoins = [
   { logo: "PLSX", symbol: "PLSX", price: "Live", change: 0.0, address: "0x95b303987a60c71504d99aa1b13b4da07b0790ab" },
   { logo: "INC", symbol: "INC", price: "Live", change: 0.0, address: "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d" },
   { logo: "HEX", symbol: "HEX", price: "Live", change: 0.0, address: "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39" },
+  { logo: "EHEX", symbol: "EHEX", price: "Live", change: 0.0, address: "0x57fde0a71132198bbec939b98976993d8d89d225" },
+  { logo: "WBTC", symbol: "WBTC", price: "Live", change: 0.0, address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599" },
+  { logo: "DAI", symbol: "DAI", price: "Live", change: 0.0, address: "0x6b175474e89094c44da98b954eedeac495271d0f" },
 ];
 
 export default function CoinsPage() {

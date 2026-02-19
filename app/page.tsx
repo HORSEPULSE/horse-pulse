@@ -29,6 +29,8 @@ const iconMap: Record<string, string> = {
   INC: "/coins/svg/inc.svg",
   HEX: "/coins/svg/hex.svg",
   EHEX: "/coins/svg/hex.svg",
+  WBTC: "/coins/svg/pwbtc.svg",
+  DAI: "/coins/svg/pdai.svg",
 };
 
 const tokenAddressMap: Record<string, string> = {
@@ -38,6 +40,8 @@ const tokenAddressMap: Record<string, string> = {
   INC: "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d",
   HEX: "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39",
   EHEX: "0x57fde0a71132198bbec939b98976993d8d89d225",
+  WBTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+  DAI: "0x6b175474e89094c44da98b954eedeac495271d0f",
 };
 
 function formatPrice(value: number | null): string {
@@ -58,7 +62,6 @@ export default function HomePage() {
   const [query, setQuery] = useState("");
   const [activeFrame, setActiveFrame] = useState<(typeof frames)[number]>("24h");
   const [showUsd, setShowUsd] = useState(true);
-  const [excludeOA, setExcludeOA] = useState(false);
   const [featuredPrices, setFeaturedPrices] = useState<Record<string, FeaturedPriceItem>>({});
   const [overviewMarketCap, setOverviewMarketCap] = useState<string | null>(null);
   const [topSubtext, setTopSubtext] = useState("PulseChain market");
@@ -150,16 +153,17 @@ export default function HomePage() {
 
   const featuredCoins = useMemo(
     () => [
+      { symbol: "PLS", subtitle: "Pulse", supply: "135T", burned: "N/A", burnedPct: "" },
       { symbol: "HORSE", subtitle: "Fire Horse", supply: "N/A", burned: "N/A", burnedPct: "" },
       { symbol: "PLSX", subtitle: "PulseX", supply: "142T", burned: "1.67T", burnedPct: "1.18%" },
       { symbol: "INC", subtitle: "Incentive", supply: "56M", burned: "121K", burnedPct: "0.216%" },
       { symbol: "HEX", subtitle: "on PulseChain", supply: "669B", burned: "N/A", burnedPct: "" },
       { symbol: "EHEX", subtitle: "HEX from Ethereum", supply: "N/A", burned: "N/A", burnedPct: "" },
+      { symbol: "WBTC", subtitle: "Wrapped BTC", supply: "N/A", burned: "N/A", burnedPct: "" },
+      { symbol: "DAI", subtitle: "Dai Stablecoin", supply: "N/A", burned: "N/A", burnedPct: "" },
     ],
     [],
   );
-
-  const visibleCoins = excludeOA ? featuredCoins.filter((coin) => coin.symbol !== "HORSE") : featuredCoins;
 
   return (
     <div className="space-y-7 pb-8 pt-16 md:pt-22">
@@ -246,12 +250,8 @@ export default function HomePage() {
         </article>
       </section>
 
-      <section
-        className={`grid gap-4 ${
-          visibleCoins.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
-        }`}
-      >
-        {visibleCoins.map((coin) => {
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        {featuredCoins.map((coin) => {
           const live = featuredPrices[coin.symbol];
           const ehexLive = featuredPrices.EHEX;
           const priceText = showUsd
@@ -265,7 +265,9 @@ export default function HomePage() {
           const liquidityText = formatCompactUsd(live?.liquidityUsd);
 
           const detailLine =
-            coin.symbol === "HORSE"
+            coin.symbol === "PLS"
+              ? "PulseChain market"
+              : coin.symbol === "HORSE"
               ? "HORSE meme coin on PulseChain"
               : coin.symbol === "PLSX"
                 ? "0.75 PLS (1:1.34)"
@@ -273,7 +275,11 @@ export default function HomePage() {
                   ? "41,550 PLS"
                   : coin.symbol === "HEX"
                     ? `155 PLS | incl. eHEX: ${formatPrice(ehexLive?.priceUsd ?? null)}`
-                    : "eHEX / WPLS";
+                    : coin.symbol === "EHEX"
+                      ? "eHEX / WPLS"
+                      : coin.symbol === "WBTC"
+                        ? "WBTC / WPLS"
+                        : "DAI / WPLS";
 
           return (
             <Link
@@ -349,17 +355,10 @@ export default function HomePage() {
       <div className="flex justify-center gap-4">
         <button
           type="button"
-          onClick={() => setExcludeOA((v) => !v)}
-          className={`subtle-pill text-base ${excludeOA ? "border-fire-accent text-fire-accent" : ""}`}
-        >
-          Exclude OA
-        </button>
-        <button
-          type="button"
           onClick={() => setShowUsd((v) => !v)}
-          className={`subtle-pill text-base ${showUsd ? "border-fire-accent text-fire-accent" : ""}`}
+          className="subtle-pill border-fire-accent text-base text-fire-accent"
         >
-          {showUsd ? "USD Mode" : "Native Mode"}
+          {showUsd ? "USD Mode" : "WPLS Mode"}
         </button>
       </div>
 

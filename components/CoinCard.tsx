@@ -11,8 +11,11 @@ const localIcons: Record<string, string> = {
   HORSE: "/coins/svg/horse.svg",
   PLS: "/coins/svg/pls.svg",
   HEX: "/coins/svg/hex.svg",
+  EHEX: "/coins/svg/hex.svg",
   INC: "/coins/svg/inc.svg",
   PLSX: "/coins/svg/plsx.svg",
+  WBTC: "/coins/svg/pwbtc.svg",
+  DAI: "/coins/svg/pdai.svg",
 };
 
 export default function CoinCard({ logo, symbol, price, change }: Props) {

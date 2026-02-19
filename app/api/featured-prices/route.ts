@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { fetchDexPairsByTokenAddress, type DexPair } from "@/lib/api";
 
-type FeaturedSymbol = "PLS" | "PLSX" | "HEX" | "INC" | "HORSE" | "EHEX";
+type FeaturedSymbol = "PLS" | "PLSX" | "HEX" | "INC" | "HORSE" | "EHEX" | "WBTC" | "DAI";
 type Frame = "5m" | "1h" | "6h" | "24h";
 
 export const dynamic = "force-dynamic";
@@ -144,6 +144,8 @@ export async function GET(request: Request) {
       INC: "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d",
       HORSE: "0x8536949300886be15d6033da56473e7c368c8df2",
       EHEX: "0x57fde0a71132198bbec939b98976993d8d89d225",
+      WBTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      DAI: "0x6b175474e89094c44da98b954eedeac495271d0f",
     };
 
     const results = await Promise.all(
