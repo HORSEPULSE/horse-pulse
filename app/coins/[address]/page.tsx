@@ -11,7 +11,7 @@ const knownIcons: Record<string, string> = {
   "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d": "/coins/svg/inc.svg",
   "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39": "/coins/svg/hex.svg",
   "0xa1077a294dde1b09bb078844df40758a5d0f9a27": "/coins/svg/pls.svg",
-  "0xb17d901469b9208b17d916112988a3fed19b5ca1": "/coins/svg/pwbtc.svg",
+  "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599": "/coins/svg/pwbtc.svg",
   "0x6b175474e89094c44da98b954eedeac495271d0f": "/coins/svg/pdai.svg",
 };
 

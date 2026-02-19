@@ -40,7 +40,7 @@ const tokenAddressMap: Record<string, string> = {
   INC: "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d",
   HEX: "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39",
   EHEX: "0x57fde0a71132198bbec939b98976993d8d89d225",
-  WBTC: "0xb17d901469b9208b17d916112988a3fed19b5ca1",
+  WBTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
   DAI: "0x6b175474e89094c44da98b954eedeac495271d0f",
 };
 

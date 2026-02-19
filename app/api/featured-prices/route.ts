@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fetchDexPairsByTokenAddress, type DexPair } from "@/lib/api";
+import { fetchDexPairByAddress, fetchDexPairsByTokenAddress, type DexPair } from "@/lib/api";
 
 type FeaturedSymbol = "PLS" | "PLSX" | "HEX" | "INC" | "HORSE" | "EHEX" | "WBTC" | "DAI";
 type Frame = "5m" | "1h" | "6h" | "24h";
@@ -144,14 +144,24 @@ export async function GET(request: Request) {
       INC: "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d",
       HORSE: "0x8536949300886be15d6033da56473e7c368c8df2",
       EHEX: "0x57fde0a71132198bbec939b98976993d8d89d225",
-      WBTC: "0xb17d901469b9208b17d916112988a3fed19b5ca1",
+      WBTC: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
       DAI: "0x6b175474e89094c44da98b954eedeac495271d0f",
+    };
+    const forcedPairMap: Partial<Record<FeaturedSymbol, string>> = {
+      WBTC: "0x46e27ea3a035ffc9e6d6d56702ce3d208ff1e58c",
     };
 
     const results = await Promise.all(
       (Object.keys(tokenMap) as FeaturedSymbol[]).map(async (symbol) => {
         try {
-          const pairs = await fetchDexPairsByTokenAddress(tokenMap[symbol]);
+          const tokenPairs = await fetchDexPairsByTokenAddress(tokenMap[symbol]);
+          const forcedPairAddress = forcedPairMap[symbol];
+          const forcedPair =
+            forcedPairAddress
+              ? await fetchDexPairByAddress("pulsechain", forcedPairAddress).catch(() => null)
+              : null;
+          // If a symbol is pinned to a known pair, use only that pair for deterministic output.
+          const pairs = forcedPair ? [forcedPair] : tokenPairs;
           const best = pickBestPulsePair(pairs) as PairWithChange | null;
           const aggregate = aggregatePairs(pairs as PairWithChange[], requestedFrame);
 

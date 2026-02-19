@@ -45,6 +45,18 @@ export async function fetchDexPairsByTokenAddress(address: string): Promise<DexP
   return data.pairs ?? [];
 }
 
+export async function fetchDexPairByAddress(chainId: string, pairAddress: string): Promise<DexPair | null> {
+  if (!chainId.trim() || !pairAddress.trim()) return null;
+  const res = await fetch(`${DEXSCREENER_BASE}/pairs/${chainId}/${pairAddress}`, {
+    next: { revalidate: 30 },
+  });
+  if (!res.ok) {
+    throw new Error(`Dexscreener pair request failed: ${res.status}`);
+  }
+  const data = (await res.json()) as { pair?: DexPair | null };
+  return data.pair ?? null;
+}
+
 type RpcRequest = {
   jsonrpc: "2.0";
   id: number;
