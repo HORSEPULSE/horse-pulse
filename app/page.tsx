@@ -159,6 +159,47 @@ export default function HomePage() {
   const topConfidenceLabel =
     topConfidence === "high" ? "High confidence" : topConfidence === "medium" ? "Medium confidence" : "Thin liquidity";
   const liquidityText = formatCompactUsd(featuredPrices.PLS?.liquidityUsd);
+  const communityStars = [
+    {
+      name: "Pulseshade",
+      address: "0x9f12...b2a1",
+      tvl: "$312K",
+      followers: "4.2K",
+      tag: "HODLer",
+    },
+    {
+      name: "BlazeRider",
+      address: "0x3ac4...49f9",
+      tvl: "$1.1M",
+      followers: "12.4K",
+      tag: "Yield Pro",
+    },
+    {
+      name: "HorseVision",
+      address: "0x7f51...9b0c",
+      tvl: "$86K",
+      followers: "1.8K",
+      tag: "AI Scout",
+    },
+  ];
+
+  const socialFeed = [
+    {
+      user: "PulseShade",
+      content: "Mapped a new AI signal for PLSX liquidity, watch for the 0.1% depth spike.",
+      time: "2m ago",
+    },
+    {
+      user: "OnyxSage",
+      content: "DEX flow hitting +$2.3M across HORSE/EHEX. Liquidity watchers engaged.",
+      time: "12m ago",
+    },
+    {
+      user: "FireOracle",
+      content: "Shared beacon pads on the dashboard: follow Pulse Radar for the next leader.",
+      time: "35m ago",
+    },
+  ];
 
   const featuredCoins = useMemo(
     () => [
@@ -330,6 +371,60 @@ export default function HomePage() {
             >
               <p className="text-xs uppercase tracking-[0.5em] text-fire-text/50">{card.label}</p>
               <p className="mt-3 text-base text-white">{card.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-3xl border border-white/10 bg-black/40 p-6 shadow-[0_25px_40px_rgba(0,0,0,0.55)]">
+        <div className="flex flex-wrap items-center justify-between gap-4 md:gap-6">
+          <div>
+            <p className="text-xs uppercase tracking-[0.4em] text-fire-text/60">Community Pulse</p>
+            <h3 className="text-2xl font-semibold text-white">Follow the wallet crew</h3>
+          </div>
+          <button
+            type="button"
+            className="rounded-full border border-fire-accent/60 px-4 py-2 text-xs text-fire-accent transition hover:bg-fire-accent/10"
+          >
+            Discover Community
+          </button>
+        </div>
+        <div className="mt-5 grid gap-4 md:grid-cols-3">
+          {communityStars.map((star) => (
+            <div key={star.name} className="rounded-2xl border border-white/10 bg-black/30 p-4">
+              <div className="flex items-center gap-3">
+                <div className="h-12 w-12 rounded-full border border-fire-accent/60 bg-gradient-to-br from-fire-accent to-fire-red" />
+                <div>
+                  <p className="text-base font-semibold text-white">{star.name}</p>
+                  <p className="text-xs text-fire-text/50">{star.tag}</p>
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-fire-text/50">{star.address}</p>
+              <div className="mt-4 flex flex-wrap gap-3 text-xs font-semibold text-fire-text/60">
+                <span className="rounded-full bg-white/[0.04] px-3 py-1">{star.tvl} TVL</span>
+                <span className="rounded-full bg-white/[0.04] px-3 py-1">{star.followers} followers</span>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-xs">
+                <p className="text-fire-text/50">Live alerts · 3</p>
+                <button className="rounded-full border border-fire-accent/60 px-3 py-1 text-xs text-fire-accent">Follow</button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 grid gap-3 md:grid-cols-3">
+          {socialFeed.map((post) => (
+            <div key={post.user} className="rounded-2xl border border-white/10 bg-black/30 p-4 text-sm">
+              <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-fire-text/50">
+                <span>{post.user}</span>
+                <span>{post.time}</span>
+              </div>
+              <p className="mt-3 text-base text-white">{post.content}</p>
+              <div className="mt-4 flex items-center gap-3 text-xs text-fire-text/50">
+                <span className="rounded-full bg-white/[0.04] px-3 py-1">Share</span>
+                <span className="rounded-full bg-white/[0.04] px-3 py-1">Comment</span>
+                <span className="rounded-full bg-white/[0.04] px-3 py-1">Bookmark</span>
+              </div>
             </div>
           ))}
         </div>

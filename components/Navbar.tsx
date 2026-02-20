@@ -9,8 +9,9 @@ import WalletAuthButton from "@/components/WalletAuthButton";
 const links = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Portfolio", href: "/profile" },
-  { label: "Explore", href: "/coins" },
+  { label: "Community", href: "/profile" },
   { label: "Ecosystem", href: "/ecosystem" },
+  { label: "Portfolio API", href: "/api/portfolio" },
   { label: "AI Risk", href: "/apps" },
   { label: "Leaderboards", href: "/stats" },
 ];
