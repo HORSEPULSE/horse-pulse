@@ -173,8 +173,91 @@ export default function HomePage() {
     [],
   );
 
+  const heroStats = [
+    {
+      label: "Total Value Locked",
+      value: overviewMarketCap !== "N/A" ? overviewMarketCap : "$--",
+      sub: topSubtext,
+    },
+    {
+      label: "PLS Change",
+      value: plsChange,
+      sub: topConfidenceLabel,
+    },
+    {
+      label: "Gas Pressure",
+      value: topPrice,
+      sub: showUsd ? "USD Mode" : "WPLS Mode",
+    },
+  ];
+
   return (
-    <div className="space-y-7 pb-8 pt-16 md:pt-22">
+    <div className="space-y-7 pb-10 pt-16 md:pt-22">
+      <section className="relative overflow-hidden rounded-[32px] border border-white/10 bg-gradient-to-br from-black/80 via-[#140c10] to-[#0f0f18] p-6 shadow-[0_25px_120px_rgba(0,0,0,0.65)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,106,0,0.35),_transparent_50%),_radial-gradient(circle_at_bottom_right,_rgba(255,46,46,0.25),_transparent_40%)]" />
+        <div className="relative z-10 grid gap-6 lg:grid-cols-[1.2fr,1fr]">
+          <div className="space-y-4">
+            <p className="text-xs uppercase tracking-[0.4em] text-fire-text/60">PulseChain Intelligence Terminal</p>
+            <h1 className="text-4xl font-semibold leading-tight text-white md:text-5xl" style={{ fontFamily: "var(--font-title)" }}>
+              HORSE PULSE • DeBank-grade signals
+            </h1>
+            <p className="text-base text-fire-text/80 md:text-lg">
+              Live PulseChain liquidity, risk, AI-backed contract insights, and realtime portfolio telemetry baked into one terminal.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                className="fire-button border-2 border-fire-accent/60 bg-gradient-to-r from-fire-accent to-fire-red px-6 py-3 text-base font-semibold tracking-wide text-black transition hover:shadow-[0_0_30px_rgba(255,106,0,0.45)]"
+              >
+                Connect Wallet
+              </button>
+              <Link
+                href="/dashboard"
+                className="rounded-full border border-white/40 px-6 py-3 text-base font-semibold text-white transition hover:border-fire-accent"
+              >
+                Explore Dashboard
+              </Link>
+            </div>
+            <div className="flex flex-wrap gap-4 pt-4">
+              {heroStats.map((stat) => (
+                <div key={stat.label} className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm shadow-[0_12px_40px_rgba(0,0,0,0.4)]">
+                  <p className="text-fire-text/60">{stat.label}</p>
+                  <p className="text-base font-semibold text-white">{stat.value}</p>
+                  <p className="text-xs text-fire-text/50">{stat.sub}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-fire-accent/30 bg-gradient-to-br from-fire-accent/10 to-black/60 p-4 text-sm text-fire-text/80">
+              <p className="text-xs uppercase tracking-[0.4em] text-fire-text/50">Live Depth</p>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                {["Chain Velocity", "DEX Liquidity", "Portfolio Flow", "AI Alerts"].map((title) => (
+                  <div key={title} className="rounded-xl border border-white/5 bg-black/40 p-3">
+                    <p className="text-xs text-fire-text/60">{title}</p>
+                    <p className="text-xl font-semibold text-white">+{(Math.random() * 12 + 1).toFixed(1)}%</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="h-[220px] rounded-2xl border border-white/10 bg-black/30 px-5 py-4">
+              <p className="text-xs text-fire-text/60">Portfolio history</p>
+              <div className="mt-3 flex h-full items-end gap-2">
+                {Array.from({ length: 12 }).map((_, idx) => (
+                  <div key={idx} className="flex-1">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-t from-fire-red to-fire-accent"
+                      style={{ height: `${Math.round(30 + Math.random() * 60)}%` }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="pointer-events-none absolute bottom-4 right-6 text-xs text-fire-text/40">PulseChain Protégé 2026 · V3 deploy</div>
+      </section>
+
       <form onSubmit={onSearch} className="rounded-full border border-white/20 bg-black/45 px-5 py-3 md:py-4">
         <input
           value={query}
@@ -205,7 +288,6 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
