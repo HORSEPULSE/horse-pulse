@@ -2,16 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, UserCircle2, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import WalletAuthButton from "@/components/WalletAuthButton";
 
 const links = [
+  { label: "Dashboard", href: "/dashboard" },
   { label: "Stats", href: "/stats" },
   { label: "Apps", href: "/apps" },
   { label: "Coins", href: "/coins" },
   { label: "Ecosystem", href: "/ecosystem" },
   { label: "Buy", href: "#" },
-  { label: "Portfolio", href: "/wallet" },
+  { label: "Portfolio", href: "/dashboard" },
   { label: "Swap", href: "#" },
 ];
 
@@ -48,13 +50,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:block">
-          <button
-            type="button"
-            className="rounded-full border border-fire-border/60 p-2 text-fire-text/90 transition hover:border-fire-accent hover:text-fire-accent"
-            aria-label="Profile"
-          >
-            <UserCircle2 size={20} />
-          </button>
+          <WalletAuthButton />
         </div>
 
         <button
@@ -81,6 +77,9 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              <div className="px-2 py-2">
+                <WalletAuthButton />
+              </div>
             </div>
           </div>
         </div>

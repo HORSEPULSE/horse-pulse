@@ -440,6 +440,43 @@ export type EcosystemApiResponse = {
   riskHeatmap: Array<{ symbol: string; riskScore: number; trustLevel: "High" | "Moderate" | "Speculative" | "High Risk" }>;
 };
 
+export type PortfolioApiResponse = {
+  address: string;
+  fetchedAt: string;
+  totalValueUsd: number;
+  totalValueNative: number | null;
+  chainBreakdown: Array<{
+    chain: "ethereum" | "bsc" | "polygon" | "arbitrum" | "optimism" | "pulsechain";
+    valueUsd: number;
+    sharePct: number;
+  }>;
+  tokenBreakdown: Array<{
+    chain: "ethereum" | "bsc" | "polygon" | "arbitrum" | "optimism" | "pulsechain";
+    tokenAddress: string;
+    symbol: string;
+    name: string;
+    balance: number;
+    priceUsd: number;
+    valueUsd: number;
+    change24hPct: number | null;
+    protocol: string | null;
+    isLP: boolean;
+    isStaked: boolean;
+  }>;
+  lpPositions: Array<unknown>;
+  stakedPositions: Array<unknown>;
+  nftPositions: Array<unknown>;
+  recentActivity: Array<{
+    hash: string;
+    chain: "ethereum" | "bsc" | "polygon" | "arbitrum" | "optimism" | "pulsechain";
+    timestamp: string;
+    action: string;
+    protocol: string | null;
+    gasUsd: number | null;
+    amountUsd: number | null;
+  }>;
+};
+
 export async function fetchProfileSnapshotClient(address: string): Promise<WalletProfileApiResponse> {
   return fetchJson<WalletProfileApiResponse>(`/api/profile/${address}`);
 }
@@ -459,4 +496,8 @@ export async function analyzeProfileClient(address: string): Promise<WalletProfi
 
 export async function fetchEcosystemSnapshotClient(): Promise<EcosystemApiResponse> {
   return fetchJson<EcosystemApiResponse>("/api/ecosystem");
+}
+
+export async function fetchPortfolioSnapshotClient(address: string): Promise<PortfolioApiResponse> {
+  return fetchJson<PortfolioApiResponse>(`/api/portfolio/${address}`);
 }

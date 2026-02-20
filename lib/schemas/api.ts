@@ -33,3 +33,12 @@ export const profileParamsSchema = z.object({
   address: evmAddressSchema,
 });
 
+export const authNonceRequestSchema = z.object({
+  address: evmAddressSchema,
+});
+
+export const authVerifyRequestSchema = z.object({
+  address: evmAddressSchema,
+  signature: z.string().regex(/^0x[a-fA-F0-9]+$/, "Invalid signature"),
+  nonce: z.string().min(8).max(128),
+});
