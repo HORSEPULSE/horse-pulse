@@ -158,6 +158,7 @@ export default function HomePage() {
   const topConfidence = featuredPrices.PLS?.confidence ?? "thin";
   const topConfidenceLabel =
     topConfidence === "high" ? "High confidence" : topConfidence === "medium" ? "Medium confidence" : "Thin liquidity";
+  const liquidityText = formatCompactUsd(featuredPrices.PLS?.liquidityUsd);
 
   const featuredCoins = useMemo(
     () => [
@@ -269,6 +270,61 @@ export default function HomePage() {
       </form>
 
       <AiAnalyzer />
+
+      <section className="grid gap-4 md:grid-cols-3">
+        {[
+          { title: "Signal Burst", value: plsChange, caption: "PLS Momentum" },
+          { title: "Liquidity Pulse", value: liquidityText, caption: "24h Depth" },
+          { title: "AI Confidence", value: topConfidenceLabel, caption: "Contract Intelligence" },
+        ].map((tile) => (
+          <div key={tile.title} className="glass p-4">
+            <p className="text-xs uppercase tracking-[0.3em] text-fire-text/60">{tile.caption}</p>
+            <p className="mt-2 text-2xl font-semibold text-white">{tile.value}</p>
+            <p className="text-sm text-fire-text/50">{tile.title}</p>
+          </div>
+        ))}
+      </section>
+
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="section-title text-fire-text/90">Pulse Deck</h2>
+          <button
+            type="button"
+            onClick={() => router.push("/ecosystem")}
+            className="rounded-full border border-fire-accent/60 px-3 py-1 text-xs uppercase text-fire-accent transition hover:bg-fire-accent/10"
+          >
+            Insights
+          </button>
+        </div>
+        <div className="grid gap-4 md:grid-cols-4">
+          {[
+            {
+              label: "Chain Depth",
+              desc: "Monitor on-chain liquidity and depth anomalies.",
+            },
+            {
+              label: "Risk Radar",
+              desc: "AI scans highlight owner controls, mint, fee changes.",
+            },
+            {
+              label: "Wallet Heat",
+              desc: "Connect to see wallet profiles, leaders, mover alerts.",
+            },
+            {
+              label: "NFT Pulse",
+              desc: "Track high-value drops across PulseChain-native collections.",
+            },
+          ].map((card) => (
+            <div
+              key={card.label}
+              className="rounded-3xl border border-white/10 bg-black/40 p-4 text-sm text-fire-text/70 transition hover:border-fire-accent/60 hover:bg-black/60"
+            >
+              <p className="text-xs uppercase tracking-[0.5em] text-fire-text/50">{card.label}</p>
+              <p className="mt-3 text-base text-white">{card.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section>
         <div className="mb-4 flex items-center justify-between">

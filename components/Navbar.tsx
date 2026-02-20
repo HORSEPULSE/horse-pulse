@@ -8,13 +8,9 @@ import WalletAuthButton from "@/components/WalletAuthButton";
 
 const links = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Stats", href: "/stats" },
-  { label: "Apps", href: "/apps" },
-  { label: "Coins", href: "/coins" },
+  { label: "Portfolio", href: "/profile" },
   { label: "Ecosystem", href: "/ecosystem" },
-  { label: "Buy", href: "#" },
-  { label: "Portfolio", href: "/dashboard" },
-  { label: "Swap", href: "#" },
+  { label: "AI Risk", href: "/coins" },
 ];
 
 export default function Navbar() {
