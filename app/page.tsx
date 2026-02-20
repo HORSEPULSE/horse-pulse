@@ -200,7 +200,7 @@ export default function HomePage() {
           <div className="space-y-4">
             <p className="text-xs uppercase tracking-[0.4em] text-fire-text/60">PulseChain Intelligence Terminal</p>
             <h1 className="text-4xl font-semibold leading-tight text-white md:text-5xl" style={{ fontFamily: "var(--font-title)" }}>
-              HORSE PULSE • DeBank-grade signals
+              HORSE PULSE • Quantum Portfolio Signal
             </h1>
             <p className="text-base text-fire-text/80 md:text-lg">
               Live PulseChain liquidity, risk, AI-backed contract insights, and realtime portfolio telemetry baked into one terminal.
@@ -229,10 +229,10 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          <div className="space-y-3">
-            <div className="rounded-2xl border border-fire-accent/30 bg-gradient-to-br from-fire-accent/10 to-black/60 p-4 text-sm text-fire-text/80">
-              <p className="text-xs uppercase tracking-[0.4em] text-fire-text/50">Live Depth</p>
-              <div className="mt-3 grid grid-cols-2 gap-3">
+        <div className="space-y-3">
+          <div className="rounded-2xl border border-fire-accent/30 bg-gradient-to-br from-fire-accent/10 to-black/60 p-4 text-sm text-fire-text/80">
+            <p className="text-xs uppercase tracking-[0.4em] text-fire-text/50">Live Depth</p>
+            <div className="mt-3 grid grid-cols-2 gap-3">
                 {["Chain Velocity", "DEX Liquidity", "Portfolio Flow", "AI Alerts"].map((title) => (
                   <div key={title} className="rounded-xl border border-white/5 bg-black/40 p-3">
                     <p className="text-xs text-fire-text/60">{title}</p>
@@ -257,6 +257,15 @@ export default function HomePage() {
           </div>
         </div>
         <div className="pointer-events-none absolute bottom-4 right-6 text-xs text-fire-text/40">PulseChain Protégé 2026 · V3 deploy</div>
+        <div className="pointer-events-none absolute bottom-20 right-8 hidden flex-col gap-2 rounded-2xl border border-white/10 bg-black/70 p-3 text-xs text-fire-text/70 md:flex">
+          <span className="text-[0.55rem] uppercase tracking-[0.6em] text-fire-text/50">Social Pulse</span>
+          <span className="text-base font-semibold text-white">Watchlist · 182 profiles</span>
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full border border-fire-accent/70 bg-gradient-to-br from-fire-accent to-fire-red" />
+            <span>Horse Pulse</span>
+          </div>
+          <p className="text-fire-text/50">Live followers +24 in last 24h · 12 alerts queued</p>
+        </div>
       </section>
 
       <form onSubmit={onSearch} className="rounded-full border border-white/20 bg-black/45 px-5 py-3 md:py-4">
